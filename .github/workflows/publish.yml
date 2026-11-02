@@ -1,0 +1,23 @@
+name: publish
+
+# Publishes to PyPI when a release tag (vX.Y.Z) is pushed. Uses PyPI trusted publishing:
+# register this repository and workflow as a trusted publisher of the immport-mcp project
+# on PyPI; no API token is stored in GitHub.
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  pypi:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install build
+      - run: python -m build
+      - uses: pypa/gh-action-pypi-publish@release/v1
